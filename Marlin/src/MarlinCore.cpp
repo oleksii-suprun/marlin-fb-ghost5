@@ -1643,6 +1643,10 @@ void setup() {
     SETUP_RUN(bdl.init(I2C_BD_SDA_PIN, I2C_BD_SCL_PIN, I2C_BD_DELAY));
   #endif
 
+  #if ENABLED(MKS_WIFI)
+    mks_wifi_init();
+  #endif
+
   marlin_state = MF_RUNNING;
 
   SETUP_LOG("setup() completed.");

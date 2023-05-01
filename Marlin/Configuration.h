@@ -1673,10 +1673,10 @@
  */
 //#define Z_IDLE_HEIGHT Z_HOME_POS
 
-#define Z_HOMING_HEIGHT  2        // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
-                                  // Be sure to have this much clearance over your Z_MAX_POS to prevent grinding.
+#define Z_HOMING_HEIGHT  2      // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
+                                // Be sure to have this much clearance over your Z_MAX_POS to prevent grinding.
 
-#define Z_AFTER_HOMING  10        // (mm) Height to move to after homing Z
+#define Z_AFTER_HOMING  10      // (mm) Height to move to after homing Z
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
@@ -2175,12 +2175,41 @@
  *   M501 - Read settings from EEPROM. (i.e., Throw away unsaved changes)
  *   M502 - Revert settings to "factory" defaults. (Follow with M500 to init the EEPROM.)
  */
-//#define EEPROM_SETTINGS     // Persistent storage with M500 and M501
+#define EEPROM_SETTINGS     // Persistent storage with M500 and M501
 //#define DISABLE_M503        // Saves ~2700 bytes of flash. Disable for release!
 #define EEPROM_CHITCHAT       // Give feedback on EEPROM commands. Disable to save PROGMEM.
 #define EEPROM_BOOT_SILENT    // Keep M503 quiet and only give errors during first load
 #if ENABLED(EEPROM_SETTINGS)
-  //#define EEPROM_AUTO_INIT  // Init EEPROM automatically on any errors.
+  // MKS Robin EEPROM:
+  // EEPROM_SD
+  // EEPROM_W25Q
+  #define EEPROM_W25Q
+
+  #if ENABLED(EEPROM_W25Q)
+    #undef SDCARD_EEPROM_EMULATION
+    #undef USE_REAL_EEPROM
+    #undef FLASH_EEPROM_EMULATION
+    #undef SRAM_EEPROM_EMULATION
+    #undef I2C_EEPROM_AT24C16
+    #define SPI_EEPROM_W25Q
+    #define SPI_EEPROM
+    #define SPI_EEPROM_OFFSET 0x700000
+    #define USE_WIRED_EEPROM    1
+    #define MARLIN_EEPROM_SIZE  4096
+  #endif
+
+  #if ENABLED(EEPROM_SD)
+    #define SDCARD_EEPROM_EMULATION
+    #undef USE_REAL_EEPROM
+    #undef FLASH_EEPROM_EMULATION
+    #undef SRAM_EEPROM_EMULATION
+    #undef I2C_EEPROM_AT24C16
+    #undef SPI_EEPROM_W25Q
+    #undef USE_WIRED_EEPROM
+    #define MARLIN_EEPROM_SIZE  4096
+  #endif
+
+  #define EEPROM_AUTO_INIT  // Init EEPROM automatically on any errors.
   //#define EEPROM_INIT_NOW   // Init EEPROM on first boot after a new build.
 #endif
 
@@ -2367,7 +2396,7 @@
  *
  * View the current statistics with M78.
  */
-//#define PRINTCOUNTER
+#define PRINTCOUNTER
 #if ENABLED(PRINTCOUNTER)
   #define PRINTCOUNTER_SAVE_INTERVAL 60 // (minutes) EEPROM save interval during print. A value of 0 will save stats at end of print.
 #endif
@@ -3136,7 +3165,7 @@
 #endif
 
 #if ENABLED(TFT_LVGL_UI)
-  //#define MKS_WIFI_MODULE  // MKS WiFi module
+  #define MKS_WIFI_MODULE  // MKS WiFi module
 #endif
 
 /**

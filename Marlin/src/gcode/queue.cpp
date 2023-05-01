@@ -434,6 +434,16 @@ void GCodeQueue::get_serial_commands() {
       hadData = true;
 
       const int c = read_serial(p);
+
+      #ifdef MKS_WIFI
+      // Use binary protocol parser when data are recevied from WIFI module.
+      // Bypass text part with G-Code.
+      if (p == MKS_WIFI_SERIAL_NUM) {
+        mks_wifi_input(c);
+        continue;
+      };
+      #endif
+
       if (c < 0) {
         // This should never happen, let's log it
         PORT_REDIRECT(SERIAL_PORTMASK(p));     // Reply to the serial port that sent the command

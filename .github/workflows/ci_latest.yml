@@ -43,13 +43,36 @@ jobs:
       - name: Get Latest Stable Version
         run: echo "BASE_VERSION=$(cat Marlin/src/inc/Version.h | grep '#define SHORT_BUILD_VERSION' | awk '{print $3}' | tr -d '"')" >> $GITHUB_ENV
 
-      - name: Create Tag
-        run: |
-          git tag ${{ env.BASE_VERSION }}-b${{ github.sha }}
-          git push --tag
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      - name: Create tag
+        uses: actions/github-script@v6
         with:
-          tag_name: ${{ env.BASE_VERSION }}-b${{ github.sha }}
-          files: .pio/build/mks_robin_nano35/Robin_nano35.bin
+          script: |
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/v${{ env.BASE_VERSION }}-b${{ github.run_id }}',
+              sha: context.sha
+            })
+
+      - name: Create Release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+
+            const release = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: 'v${{ env.BASE_VERSION }}-b${{ github.run_id }}',
+              make_latest: 'true',
+              generate_release_notes: true,
+            });
+
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.data.id,
+              name: 'Robin_nano35.bin',
+              data: await fs.readFileSync('.pio/build/mks_robin_nano_v1v2/Robin_nano35.bin'),
+            });

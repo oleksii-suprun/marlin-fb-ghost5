@@ -28,6 +28,14 @@
 
 #include "../inc/MarlinConfig.h"
 
+#if ENABLED(MKS_WIFI)
+#include "../module/mks_wifi/mks_wifi.h"
+#endif
+
+#if ENABLED(MKS_WIFI)
+  #include "../module/mks_wifi/mks_wifi.h"
+#endif
+
 class GCodeQueue {
 public:
   /**

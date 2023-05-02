@@ -13,6 +13,8 @@
 
 #ifdef __STM32F1__
 
+#if 0
+
 #include "../../inc/MarlinConfig.h"
 
 #if SD_CONNECTION_IS(ONBOARD)
@@ -568,4 +570,7 @@ DRESULT disk_read (
 #endif // _DISKIO_IOCTL
 
 #endif // SD_CONNECTION_IS(ONBOARD)
+
+#endif
+
 #endif // __STM32F1__

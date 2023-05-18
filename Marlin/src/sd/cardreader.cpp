@@ -384,6 +384,7 @@ void CardReader::ls(const uint8_t lsflags) {
     serial_index_t port = queue.ring_buffer.command_port();
     char f_name_buf[100];
     #endif
+
     int i, pathLen = path ? strlen(path) : 0;
 
     // SERIAL_ECHOPGM("Full Path: "); SERIAL_ECHOLN(path);
@@ -423,6 +424,7 @@ void CardReader::ls(const uint8_t lsflags) {
       #else
         SERIAL_CHAR('/');
       #endif
+
       SERIAL_ECHO(longFilename[0] ? longFilename : filename);
 
       // If the filename was printed then that's it

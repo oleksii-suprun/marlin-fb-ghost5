@@ -114,10 +114,10 @@ public:
 
   CardReader();
 
-#if ENABLED(MKS_WIFI)
+  #if ENABLED(MKS_WIFI)
   static void GetSelectedFilename(char *filename);
   static uint32_t GetSelectedFilesize(void);
-#endif
+  #endif
 
   static void changeMedia(DiskIODriver *_driver) { driver = _driver; }
 
